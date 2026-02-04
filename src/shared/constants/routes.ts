@@ -5,7 +5,7 @@
 export const ROUTES = {
   HOME: '/',
   // Add more routes as they are created
-} as const;
+} as const
 
-export type RouteKey = keyof typeof ROUTES;
-export type RoutePath = (typeof ROUTES)[RouteKey];
+export type RouteKey = keyof typeof ROUTES
+export type RoutePath = (typeof ROUTES)[RouteKey]

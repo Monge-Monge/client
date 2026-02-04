@@ -1,4 +1,4 @@
-export { api, httpClient } from './http-client';
+export { api, httpClient } from './http-client'
 export {
   atomWithInfiniteQuery,
   atomWithMutation,
@@ -6,6 +6,6 @@ export {
   atomWithSuspenseInfiniteQuery,
   atomWithSuspenseQuery,
   queryClientAtom,
-} from './jotai-query';
-export { queryClient } from './query-client';
-export { cn } from './utils';
+} from './jotai-query'
+export { queryClient } from './query-client'
+export { cn } from './utils'
