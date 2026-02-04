@@ -8,4 +8,4 @@ export {
   atomWithSuspenseInfiniteQuery,
   atomWithSuspenseQuery,
   queryClientAtom,
-} from 'jotai-tanstack-query'
+} from 'jotai-tanstack-query';

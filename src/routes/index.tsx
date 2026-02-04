@@ -1,8 +1,8 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/')({
   component: HomePage,
-})
+});
 
 function HomePage() {
   return (
@@ -12,5 +12,5 @@ function HomePage() {
         프로젝트가 성공적으로 설정되었습니다.
       </p>
     </div>
-  )
+  );
 }

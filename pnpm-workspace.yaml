@@ -1,0 +1,3 @@
+onlyBuiltDependencies:
+  - '@suspensive/react-query'
+  - esbuild
