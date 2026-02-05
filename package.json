@@ -15,6 +15,8 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.1.0",
+    "@clerk/clerk-react": "^5.60.0",
+    "@clerk/themes": "^2.4.51",
     "@hookform/resolvers": "^5.2.2",
     "@suspensive/jotai": "^3.19.0",
     "@suspensive/react": "^3.19.0",

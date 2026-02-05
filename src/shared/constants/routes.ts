@@ -4,7 +4,9 @@
  */
 export const ROUTES = {
   HOME: '/',
-  // Add more routes as they are created
+  SIGN_IN: '/sign-in',
+  SIGN_UP: '/sign-up',
+  DASHBOARD: '/dashboard',
 } as const;
 
 export type RouteKey = keyof typeof ROUTES;
