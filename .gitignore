@@ -42,3 +42,7 @@ coverage
 *.tsbuildinfo
 .omc
 .mcp.json
+
+# CLAUDE
+**/CLAUDE.md
+!/CLAUDE.md
