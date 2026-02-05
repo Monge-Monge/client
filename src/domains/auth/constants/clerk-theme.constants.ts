@@ -10,56 +10,75 @@
  * Strict type definition for Clerk appearance configuration
  * Avoids Clerk's Appearance type which contains 'any'
  */
-export interface ClerkThemeConfig {
-  variables: {
-    colorPrimary: string;
-    colorBackground: string;
-    colorText: string;
-    colorTextSecondary: string;
-    colorInputBackground: string;
-    colorInputText: string;
-    colorDanger: string;
-    fontFamily: string;
-    borderRadius: string;
-  };
-  elements: {
-    card: { boxShadow: string; borderColor: string; borderWidth: string };
-    formButtonPrimary: { backgroundColor: string; color: string };
-    socialButtonsBlockButton: { borderColor: string; color: string };
-    socialButtonsBlockButtonText: { color: string };
-    formFieldInput: { borderColor: string; backgroundColor: string };
-    footerActionLink: { color: string };
-  };
+interface ClerkVariables {
+  colorPrimary: string;
+  colorBackground: string;
+  colorText: string;
+  colorTextSecondary: string;
+  colorInputBackground: string;
+  colorInputText: string;
+  colorDanger: string;
+  colorNeutral: string;
+  fontFamily: string;
+  borderRadius: string;
 }
 
-// Light theme colors (from globals.css :root)
+interface ClerkElements {
+  card: Record<string, string>;
+  cardBox: Record<string, string>;
+  formButtonPrimary: Record<string, string>;
+  socialButtonsBlockButton: Record<string, string>;
+  formFieldInput: Record<string, string>;
+  footerActionLink: Record<string, string>;
+  headerTitle: Record<string, string>;
+  headerSubtitle: Record<string, string>;
+  dividerLine: Record<string, string>;
+  dividerText: Record<string, string>;
+  formFieldLabel: Record<string, string>;
+  identityPreviewText: Record<string, string>;
+  formFieldInputShowPasswordButton: Record<string, string>;
+}
+
+export interface ClerkThemeConfig {
+  layout?: {
+    socialButtonsPlacement?: 'top' | 'bottom';
+    socialButtonsVariant?: 'iconButton' | 'blockButton';
+    logoPlacement?: 'inside' | 'outside' | 'none';
+  };
+  variables: ClerkVariables;
+  elements: ClerkElements;
+  signIn?: { variables: ClerkVariables; elements: ClerkElements };
+  signUp?: { variables: ClerkVariables; elements: ClerkElements };
+}
+
+// Light theme colors (hex conversion from globals.css OKLCH)
 const lightColors = {
-  background: 'oklch(100% 0 0)',
-  foreground: 'oklch(14.08% 0.004 285.82)',
-  card: 'oklch(100% 0 0)',
-  primary: 'oklch(20.47% 0.006 285.88)',
-  primaryForeground: 'oklch(98.51% 0.001 106.42)',
-  muted: 'oklch(96.76% 0.001 286.38)',
-  mutedForeground: 'oklch(55.19% 0.014 285.94)',
-  border: 'oklch(91.97% 0.004 286.32)',
-  input: 'oklch(91.97% 0.004 286.32)',
-  ring: 'oklch(14.08% 0.004 285.82)',
-  destructive: 'oklch(57.71% 0.215 27.33)',
+  background: '#ffffff',
+  foreground: '#0a0a0a',
+  card: '#ffffff',
+  primary: '#171717',
+  primaryForeground: '#fafafa',
+  muted: '#f5f5f5',
+  mutedForeground: '#737373',
+  border: '#e5e5e5',
+  input: '#e5e5e5',
+  ring: '#0a0a0a',
+  destructive: '#ef4444',
 } as const;
 
-// Dark theme colors (from globals.css .dark)
+// Dark theme colors (hex conversion from globals.css OKLCH)
 const darkColors = {
-  background: 'oklch(14.08% 0.004 285.82)',
-  foreground: 'oklch(98.51% 0.001 106.42)',
-  card: 'oklch(14.08% 0.004 285.82)',
-  primary: 'oklch(98.51% 0.001 106.42)',
-  primaryForeground: 'oklch(20.47% 0.006 285.88)',
-  muted: 'oklch(26.98% 0.006 286.03)',
-  mutedForeground: 'oklch(70.67% 0.01 286.07)',
-  border: 'oklch(26.98% 0.006 286.03)',
-  input: 'oklch(26.98% 0.006 286.03)',
-  ring: 'oklch(83.15% 0.006 286.03)',
-  destructive: 'oklch(57.71% 0.215 27.33)',
+  background: '#0a0a0a',
+  foreground: '#fafafa',
+  card: '#0a0a0a',
+  primary: '#fafafa',
+  primaryForeground: '#171717',
+  muted: '#262626',
+  mutedForeground: '#a3a3a3',
+  border: '#262626',
+  input: '#262626',
+  ring: '#d4d4d4',
+  destructive: '#ef4444',
 } as const;
 
 // Pretendard font family matching globals.css
@@ -68,43 +87,79 @@ const fontFamily = `'Pretendard Variable', Pretendard, -apple-system, BlinkMacSy
 type ColorConfig = typeof lightColors;
 
 function createClerkAppearance(colors: ColorConfig): ClerkThemeConfig {
+  const variables: ClerkVariables = {
+    colorPrimary: colors.primary,
+    colorBackground: colors.background,
+    colorText: colors.foreground,
+    colorTextSecondary: colors.mutedForeground,
+    colorInputBackground: colors.card,
+    colorInputText: colors.foreground,
+    colorDanger: colors.destructive,
+    colorNeutral: colors.foreground,
+    fontFamily,
+    borderRadius: '0.5rem',
+  };
+
+  const elements: ClerkElements = {
+    card: {
+      backgroundColor: colors.background,
+      borderColor: colors.border,
+      borderWidth: '1px',
+      boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+    },
+    cardBox: {
+      backgroundColor: colors.background,
+    },
+    formButtonPrimary: {
+      backgroundColor: colors.primary,
+      color: colors.primaryForeground,
+    },
+    socialButtonsBlockButton: {
+      backgroundColor: colors.background,
+      borderColor: colors.border,
+      color: colors.foreground,
+    },
+    formFieldInput: {
+      backgroundColor: colors.background,
+      borderColor: colors.border,
+      color: colors.foreground,
+    },
+    footerActionLink: {
+      color: colors.primary,
+    },
+    headerTitle: {
+      color: colors.foreground,
+    },
+    headerSubtitle: {
+      color: colors.mutedForeground,
+    },
+    dividerLine: {
+      backgroundColor: colors.border,
+    },
+    dividerText: {
+      color: colors.mutedForeground,
+    },
+    formFieldLabel: {
+      color: colors.foreground,
+    },
+    identityPreviewText: {
+      color: colors.foreground,
+    },
+    formFieldInputShowPasswordButton: {
+      color: colors.mutedForeground,
+    },
+  };
+
   return {
-    variables: {
-      colorPrimary: colors.primary,
-      colorBackground: colors.background,
-      colorText: colors.foreground,
-      colorTextSecondary: colors.mutedForeground,
-      colorInputBackground: colors.card,
-      colorInputText: colors.foreground,
-      colorDanger: colors.destructive,
-      fontFamily,
-      borderRadius: '0.5rem',
+    layout: {
+      socialButtonsPlacement: 'top' as const,
+      socialButtonsVariant: 'iconButton' as const,
     },
-    elements: {
-      card: {
-        boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
-        borderColor: colors.border,
-        borderWidth: '1px',
-      },
-      formButtonPrimary: {
-        backgroundColor: colors.primary,
-        color: colors.primaryForeground,
-      },
-      socialButtonsBlockButton: {
-        borderColor: colors.border,
-        color: colors.foreground,
-      },
-      socialButtonsBlockButtonText: {
-        color: colors.foreground,
-      },
-      formFieldInput: {
-        borderColor: colors.input,
-        backgroundColor: colors.background,
-      },
-      footerActionLink: {
-        color: colors.primary,
-      },
-    },
+    variables,
+    elements,
+    // Apply same styling to modal components
+    signIn: { variables, elements },
+    signUp: { variables, elements },
   };
 }
 

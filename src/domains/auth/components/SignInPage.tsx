@@ -1,4 +1,5 @@
 import { SignIn } from '@clerk/clerk-react';
+import { dark } from '@clerk/themes';
 
 import { useTheme } from 'next-themes';
 
@@ -23,7 +24,10 @@ export function SignInPage({ redirectUrl }: SignInPageProps) {
         path="/sign-in"
         signUpUrl="/sign-up"
         fallbackRedirectUrl={redirectUrl ?? '/'}
-        appearance={appearance}
+        appearance={{
+          baseTheme: resolvedTheme === 'dark' ? dark : undefined,
+          ...appearance,
+        }}
       />
     </div>
   );

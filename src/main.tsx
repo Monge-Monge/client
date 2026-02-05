@@ -1,6 +1,7 @@
 import type { RouterContext } from '@/shared/lib/router-context';
 
 import { ClerkProvider, useAuth } from '@clerk/clerk-react';
+import { dark } from '@clerk/themes';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { createRouter, RouterProvider } from '@tanstack/react-router';
@@ -49,7 +50,10 @@ function ClerkProviderWithTheme({ children }: { children: React.ReactNode }) {
   return (
     <ClerkProvider
       publishableKey={env.CLERK_PUBLISHABLE_KEY}
-      appearance={appearance}
+      appearance={{
+        baseTheme: resolvedTheme === 'dark' ? dark : undefined,
+        ...appearance,
+      }}
     >
       {children}
     </ClerkProvider>

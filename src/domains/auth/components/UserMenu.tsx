@@ -5,6 +5,7 @@ import {
   SignUpButton,
   UserButton,
 } from '@clerk/clerk-react';
+import { dark } from '@clerk/themes';
 
 import { useTheme } from 'next-themes';
 
@@ -44,10 +45,11 @@ export function UserMenu() {
         <UserButton
           afterSignOutUrl="/"
           appearance={{
+            baseTheme: resolvedTheme === 'dark' ? dark : undefined,
             ...appearance,
             elements: {
               ...appearance.elements,
-              avatarBox: 'h-8 w-8',
+              avatarBox: { height: '2rem', width: '2rem' },
             },
           }}
         />
