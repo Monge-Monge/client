@@ -7,6 +7,7 @@ import {
 } from '@tanstack/react-router';
 
 import { UserMenu } from '@/domains/auth';
+import { ThemeToggle } from '@/shared/components/ThemeToggle';
 
 /**
  * Root route with typed context
@@ -24,7 +25,10 @@ function RootLayout() {
           <Link to="/" className="font-semibold">
             Mongemonge
           </Link>
-          <UserMenu />
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <UserMenu />
+          </div>
         </nav>
       </header>
       <main>
