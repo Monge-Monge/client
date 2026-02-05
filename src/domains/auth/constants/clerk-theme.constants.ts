@@ -84,7 +84,19 @@ const darkColors = {
 // Pretendard font family matching globals.css
 const fontFamily = `'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif`;
 
-type ColorConfig = typeof lightColors;
+interface ColorConfig {
+  background: string;
+  foreground: string;
+  card: string;
+  primary: string;
+  primaryForeground: string;
+  muted: string;
+  mutedForeground: string;
+  border: string;
+  input: string;
+  ring: string;
+  destructive: string;
+}
 
 function createClerkAppearance(colors: ColorConfig): ClerkThemeConfig {
   const variables: ClerkVariables = {
