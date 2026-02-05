@@ -8,12 +8,12 @@ import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 
 import { Provider as JotaiProvider } from 'jotai';
 import { DevTools as JotaiDevTools } from 'jotai-devtools';
-import { ThemeProvider } from 'next-themes';
+import { ThemeProvider, useTheme } from 'next-themes';
 import { OverlayProvider } from 'overlay-kit';
 import { StrictMode, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { LoadingSpinner } from '@/domains/auth';
+import { getClerkAppearance, LoadingSpinner } from '@/domains/auth';
 import { env } from '@/shared/lib/env';
 import { initializeHttpClient } from '@/shared/lib/http-client';
 import { queryClient } from '@/shared/lib/query-client';
@@ -36,6 +36,24 @@ function createAppRouter(auth: RouterContext['auth']) {
     defaultPreload: 'intent',
     defaultPreloadStaleTime: 0,
   });
+}
+
+/**
+ * ClerkProvider wrapper that applies theme-aware appearance
+ * Must be inside ThemeProvider to access useTheme()
+ */
+function ClerkProviderWithTheme({ children }: { children: React.ReactNode }) {
+  const { resolvedTheme } = useTheme();
+  const appearance = getClerkAppearance(resolvedTheme);
+
+  return (
+    <ClerkProvider
+      publishableKey={env.CLERK_PUBLISHABLE_KEY}
+      appearance={appearance}
+    >
+      {children}
+    </ClerkProvider>
+  );
 }
 
 /**
@@ -76,10 +94,10 @@ function AppWithAuth() {
  *
  * Provider order (outermost to innermost):
  * 1. StrictMode - React strict mode
- * 2. ClerkProvider - Auth context (outermost for auth access everywhere)
- * 3. JotaiProvider - Client state
- * 4. QueryClientProvider - Server state
- * 5. ThemeProvider - Theme context
+ * 2. ThemeProvider - Theme context (must wrap ClerkProvider for useTheme access)
+ * 3. ClerkProviderWithTheme - Auth context with theme-aware appearance
+ * 4. JotaiProvider - Client state
+ * 5. QueryClientProvider - Server state
  * 6. OverlayProvider - Modal/overlay context
  * 7. RouterProvider - Routing (innermost, needs all above contexts)
  *
@@ -90,18 +108,18 @@ function AppWithAuth() {
  */
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ClerkProvider publishableKey={env.CLERK_PUBLISHABLE_KEY}>
-      <JotaiProvider>
-        <QueryClientProvider client={queryClient}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <ClerkProviderWithTheme>
+        <JotaiProvider>
+          <QueryClientProvider client={queryClient}>
             <OverlayProvider>
               <AppWithAuth />
             </OverlayProvider>
-          </ThemeProvider>
-          <ReactQueryDevtools initialIsOpen={false} />
-          <JotaiDevTools />
-        </QueryClientProvider>
-      </JotaiProvider>
-    </ClerkProvider>
+            <ReactQueryDevtools initialIsOpen={false} />
+            <JotaiDevTools />
+          </QueryClientProvider>
+        </JotaiProvider>
+      </ClerkProviderWithTheme>
+    </ThemeProvider>
   </StrictMode>
 );

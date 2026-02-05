@@ -9,3 +9,9 @@ export type { AuthState, AuthUser } from './types/auth.types';
 
 // Constants
 export { AUTH_MESSAGES, AUTH_ROUTES } from './constants/auth.constants';
+export type { ClerkThemeConfig } from './constants/clerk-theme.constants';
+export {
+  clerkDarkAppearance,
+  clerkLightAppearance,
+  getClerkAppearance,
+} from './constants/clerk-theme.constants';
