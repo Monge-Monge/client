@@ -7,8 +7,7 @@ import {
 } from '@clerk/clerk-react';
 import { dark } from '@clerk/themes';
 
-import { useTheme } from 'next-themes';
-
+import { useTheme } from '@/shared/components/ThemeProvider';
 import { Button } from '@/shared/ui/button';
 
 import { getClerkAppearance } from '../constants/clerk-theme.constants';
