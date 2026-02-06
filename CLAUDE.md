@@ -57,6 +57,7 @@ import { LoginButton } from './LoginButton';
 ## State Management
 
 ### Client State (Jotai)
+
 ```typescript
 // domains/[domain]/atoms/[name].atoms.ts
 import { atom } from 'jotai';
@@ -65,6 +66,7 @@ export const countAtom = atom(0);
 ```
 
 ### Server State (jotai-tanstack-query)
+
 ```typescript
 // domains/[domain]/atoms/[name].atoms.ts
 import { atomWithQuery } from '@/shared/lib/jotai-query';
@@ -92,6 +94,7 @@ export const userApi = {
 ## Component Guidelines
 
 ### File Naming
+
 - Components: `PascalCase.tsx`
 - Hooks: `use-kebab-case.ts`
 - Utilities: `kebab-case.ts`
@@ -100,6 +103,7 @@ export const userApi = {
 - API: `[name].api.ts`
 
 ### Component Structure
+
 ```typescript
 // 1. Imports
 // 2. Types (if not in separate file)
@@ -111,6 +115,7 @@ export const userApi = {
 ## shadcn/ui Usage
 
 Add components to `src/shared/ui/`:
+
 ```bash
 pnpm dlx shadcn@latest add button
 ```

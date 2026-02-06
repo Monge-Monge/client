@@ -185,7 +185,7 @@ export const clerkDarkAppearance: ClerkThemeConfig =
  * @param theme - 'light', 'dark', or undefined (defaults to light)
  */
 export function getClerkAppearance(
-  theme: string | undefined
+  theme: string | undefined,
 ): ClerkThemeConfig {
   return theme === 'dark' ? clerkDarkAppearance : clerkLightAppearance;
 }
