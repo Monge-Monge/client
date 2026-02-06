@@ -8,7 +8,7 @@ function getRequiredEnvVar(key: 'VITE_CLERK_PUBLISHABLE_KEY'): string {
   if (!value) {
     throw new Error(
       `Missing required environment variable: ${key}\n` +
-        `Please add it to your .env.local file.`
+        `Please add it to your .env.local file.`,
     );
   }
   return value;

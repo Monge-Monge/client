@@ -40,10 +40,10 @@ constants/
 
 ```typescript
 // ❌ 잘못된 방법
-colorPrimary: 'var(--color-primary)'
+colorPrimary: 'var(--color-primary)';
 
 // ✅ 올바른 방법
-colorPrimary: 'oklch(20.47% 0.006 285.88)'
+colorPrimary: 'oklch(20.47% 0.006 285.88)';
 ```
 
 ### 색상 값 업데이트
@@ -67,12 +67,12 @@ colorPrimary: 'oklch(20.47% 0.006 285.88)'
 
 ## 컴포넌트
 
-| 컴포넌트 | 용도 |
-|----------|------|
-| `SignInPage` | 로그인 페이지 |
-| `SignUpPage` | 회원가입 페이지 |
-| `UserMenu` | 헤더 사용자 메뉴 |
-| `LoadingSpinner` | 로딩 표시 |
+| 컴포넌트         | 용도             |
+| ---------------- | ---------------- |
+| `SignInPage`     | 로그인 페이지    |
+| `SignUpPage`     | 회원가입 페이지  |
+| `UserMenu`       | 헤더 사용자 메뉴 |
+| `LoadingSpinner` | 로딩 표시        |
 
 ## 환경 변수
 

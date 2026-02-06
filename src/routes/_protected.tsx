@@ -6,7 +6,7 @@ import {
   useLocation,
 } from '@tanstack/react-router';
 
-import { AUTH_ROUTES } from '@/domains/auth';
+import { ROUTES } from '@/shared/constants/routes';
 
 /**
  * Protected layout route using Clerk's declarative components
@@ -30,7 +30,7 @@ function ProtectedLayout() {
       </SignedIn>
       <SignedOut>
         <Navigate
-          to={AUTH_ROUTES.SIGN_IN}
+          to={ROUTES.SIGN_IN}
           search={{ redirect: location.pathname }}
         />
       </SignedOut>

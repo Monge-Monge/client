@@ -1,7 +1,7 @@
 import { SignUp } from '@clerk/clerk-react';
 import { dark } from '@clerk/themes';
 
-import { useTheme } from 'next-themes';
+import { useTheme } from '@/shared/components/ThemeProvider';
 
 import { getClerkAppearance } from '../constants/clerk-theme.constants';
 

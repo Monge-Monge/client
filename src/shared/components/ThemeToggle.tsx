@@ -1,6 +1,6 @@
 import { Moon, Sun } from 'lucide-react';
-import { useTheme } from 'next-themes';
 
+import { useTheme } from '@/shared/components/ThemeProvider';
 import { Button } from '@/shared/ui/button';
 
 /**
@@ -8,15 +8,15 @@ import { Button } from '@/shared/ui/button';
  * 클릭 시 light <-> dark 테마 전환
  */
 export function ThemeToggle() {
-  const { setTheme, theme } = useTheme();
+  const { setTheme, resolvedTheme } = useTheme();
 
   const handleThemeToggle = () => {
-    setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
+    setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
   };
 
   return (
     <Button variant="ghost" size="icon" onClick={handleThemeToggle}>
-      {theme === 'dark' ? (
+      {resolvedTheme === 'dark' ? (
         <Moon className="size-5" />
       ) : (
         <Sun className="size-5" />
