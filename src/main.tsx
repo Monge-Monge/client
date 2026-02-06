@@ -5,16 +5,16 @@ import { dark } from '@clerk/themes';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { createRouter, RouterProvider } from '@tanstack/react-router';
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 
 import { Provider as JotaiProvider } from 'jotai';
-import { DevTools as JotaiDevTools } from 'jotai-devtools';
-import { ThemeProvider, useTheme } from 'next-themes';
 import { OverlayProvider } from 'overlay-kit';
-import { StrictMode, useEffect } from 'react';
+import { lazy, StrictMode, Suspense, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { getClerkAppearance, LoadingSpinner } from '@/domains/auth';
+import { getClerkAppearance } from '@/domains/auth';
+import { HydrateAtoms } from '@/shared/components/HydrateAtoms';
+import { LoadingSpinner } from '@/shared/components/LoadingSpinner';
+import { ThemeProvider, useTheme } from '@/shared/components/ThemeProvider';
 import { env } from '@/shared/lib/env';
 import { initializeHttpClient } from '@/shared/lib/http-client';
 import { queryClient } from '@/shared/lib/query-client';
@@ -23,20 +23,39 @@ import { routeTree } from './routeTree.gen';
 
 import '@/styles/globals.css';
 
+// Lazy-load devtools only in development
+const TanStackRouterDevtools = import.meta.env.DEV
+  ? lazy(() =>
+      import('@tanstack/react-router-devtools').then((mod) => ({
+        default: mod.TanStackRouterDevtools,
+      })),
+    )
+  : () => null;
+
+const JotaiDevTools = import.meta.env.DEV
+  ? lazy(() =>
+      import('jotai-devtools').then((mod) => ({
+        default: mod.DevTools,
+      })),
+    )
+  : () => null;
+
+// Create router at module level (singleton)
+const router = createRouter({
+  routeTree,
+  context: {
+    queryClient,
+    auth: undefined! as RouterContext['auth'],
+  },
+  defaultPreload: 'intent',
+  defaultPreloadStaleTime: 0,
+});
+
 // Type declaration for router registration
 declare module '@tanstack/react-router' {
   interface Register {
-    router: ReturnType<typeof createAppRouter>;
+    router: typeof router;
   }
-}
-
-function createAppRouter(auth: RouterContext['auth']) {
-  return createRouter({
-    routeTree,
-    context: { queryClient, auth },
-    defaultPreload: 'intent',
-    defaultPreloadStaleTime: 0,
-  });
 }
 
 /**
@@ -50,6 +69,7 @@ function ClerkProviderWithTheme({ children }: { children: React.ReactNode }) {
   return (
     <ClerkProvider
       publishableKey={env.CLERK_PUBLISHABLE_KEY}
+      allowedRedirectOrigins={[window.location.origin]}
       appearance={{
         baseTheme: resolvedTheme === 'dark' ? dark : undefined,
         ...appearance,
@@ -62,33 +82,42 @@ function ClerkProviderWithTheme({ children }: { children: React.ReactNode }) {
 
 /**
  * Inner app component that has access to Clerk auth context
- * Creates router with auth state in context
+ * Updates module-level router with real auth context
  */
 function AppWithAuth() {
-  const { isSignedIn, isLoaded, userId, getToken } = useAuth();
+  const auth = useAuth();
 
   // Initialize HTTP client with Clerk's getToken
   useEffect(() => {
-    initializeHttpClient(getToken);
-  }, [getToken]);
+    initializeHttpClient(auth.getToken);
+  }, [auth.getToken]);
 
-  // React Compiler handles memoization - no useMemo needed
-  const router = createAppRouter({
-    isSignedIn,
-    isLoaded,
-    userId,
-    getToken,
-  });
+  // Update router context with real auth
+  useEffect(() => {
+    router.update({
+      context: {
+        queryClient,
+        auth: {
+          isSignedIn: auth.isSignedIn,
+          isLoaded: auth.isLoaded,
+          userId: auth.userId,
+          getToken: auth.getToken,
+        },
+      },
+    });
+  }, [auth.isSignedIn, auth.isLoaded, auth.userId, auth.getToken]);
 
   // Show loading while Clerk initializes
-  if (!isLoaded) {
+  if (!auth.isLoaded) {
     return <LoadingSpinner />;
   }
 
   return (
     <>
       <RouterProvider router={router} />
-      <TanStackRouterDevtools router={router} position="bottom-right" />
+      <Suspense fallback={null}>
+        <TanStackRouterDevtools router={router} position="bottom-right" />
+      </Suspense>
     </>
   );
 }
@@ -102,8 +131,9 @@ function AppWithAuth() {
  * 3. ClerkProviderWithTheme - Auth context with theme-aware appearance
  * 4. JotaiProvider - Client state
  * 5. QueryClientProvider - Server state
- * 6. OverlayProvider - Modal/overlay context
- * 7. RouterProvider - Routing (innermost, needs all above contexts)
+ * 6. HydrateAtoms - Syncs queryClient into Jotai's queryClientAtom
+ * 7. OverlayProvider - Modal/overlay context
+ * 8. RouterProvider - Routing (innermost, needs all above contexts)
  *
  * DevTools placement:
  * - TanStackRouterDevtools: Inside AppWithAuth (needs router instance)
@@ -112,18 +142,22 @@ function AppWithAuth() {
  */
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+    <ThemeProvider defaultTheme="system">
       <ClerkProviderWithTheme>
         <JotaiProvider>
           <QueryClientProvider client={queryClient}>
-            <OverlayProvider>
-              <AppWithAuth />
-            </OverlayProvider>
+            <HydrateAtoms queryClient={queryClient}>
+              <OverlayProvider>
+                <AppWithAuth />
+              </OverlayProvider>
+            </HydrateAtoms>
             <ReactQueryDevtools initialIsOpen={false} />
-            <JotaiDevTools />
+            <Suspense fallback={null}>
+              <JotaiDevTools />
+            </Suspense>
           </QueryClientProvider>
         </JotaiProvider>
       </ClerkProviderWithTheme>
     </ThemeProvider>
-  </StrictMode>
+  </StrictMode>,
 );
