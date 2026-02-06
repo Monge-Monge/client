@@ -3,10 +3,11 @@ export default {
   semi: true,
   singleQuote: true,
   tabWidth: 2,
-  trailingComma: 'es5',
+  trailingComma: 'all',
   printWidth: 80,
   bracketSpacing: true,
-  arrowParens: 'avoid',
+  arrowParens: 'always',
   endOfLine: 'lf',
   plugins: ['prettier-plugin-tailwindcss'],
-}
+  tailwindStylesheet: './src/styles/globals.css',
+};

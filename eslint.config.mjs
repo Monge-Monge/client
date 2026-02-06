@@ -1,13 +1,12 @@
 // @ts-check
-import eslint from '@eslint/js'
-import prettierConfig from 'eslint-config-prettier'
-import prettierPlugin from 'eslint-plugin-prettier'
-import reactPlugin from 'eslint-plugin-react'
-import reactCompiler from 'eslint-plugin-react-compiler'
-import reactHooksPlugin from 'eslint-plugin-react-hooks'
-import reactRefreshPlugin from 'eslint-plugin-react-refresh'
-import simpleImportSort from 'eslint-plugin-simple-import-sort'
-import tseslint from 'typescript-eslint'
+import eslint from '@eslint/js';
+import prettierConfig from 'eslint-config-prettier';
+import prettierPlugin from 'eslint-plugin-prettier';
+import reactPlugin from 'eslint-plugin-react';
+import reactHooksPlugin from 'eslint-plugin-react-hooks';
+import reactRefreshPlugin from 'eslint-plugin-react-refresh';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   // 전역 무시
@@ -33,7 +32,6 @@ export default tseslint.config(
     files: ['**/*.{ts,tsx}'],
     plugins: {
       react: reactPlugin,
-      'react-compiler': reactCompiler,
       'react-hooks': reactHooksPlugin,
       'react-refresh': reactRefreshPlugin,
       'simple-import-sort': simpleImportSort,
@@ -54,7 +52,6 @@ export default tseslint.config(
       ...reactPlugin.configs.recommended.rules,
       ...reactPlugin.configs['jsx-runtime'].rules,
       ...reactHooksPlugin.configs.recommended.rules,
-      'react-compiler/react-compiler': 'error',
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },
@@ -121,9 +118,17 @@ export default tseslint.config(
     },
   },
 
+  // Provider + hook 패턴 허용
+  {
+    files: ['src/shared/components/ThemeProvider.tsx'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
+  },
+
   // JavaScript 파일 타입 체크 비활성화
   {
     files: ['**/*.js', '**/*.mjs'],
     extends: [tseslint.configs.disableTypeChecked],
-  }
-)
+  },
+);
