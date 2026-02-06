@@ -36,12 +36,12 @@ export const httpClient: KyInstance = ky.create({
   timeout: 30_000,
   retry: {
     limit: 2,
-    methods: ['get', 'post', 'put', 'patch', 'delete'],
+    methods: ['get', 'put'],
     statusCodes: [401, 408, 500, 502, 503, 504],
   },
   hooks: {
     beforeRequest: [
-      async request => {
+      async (request) => {
         if (tokenGetter) {
           const token = await tokenGetter();
           if (token) {
@@ -81,19 +81,19 @@ export const api = {
   post: <T>(
     url: string,
     json: unknown,
-    options?: Parameters<typeof httpClient.post>[1]
+    options?: Parameters<typeof httpClient.post>[1],
   ) => httpClient.post(url, { json, ...options }).json<T>(),
 
   put: <T>(
     url: string,
     json: unknown,
-    options?: Parameters<typeof httpClient.put>[1]
+    options?: Parameters<typeof httpClient.put>[1],
   ) => httpClient.put(url, { json, ...options }).json<T>(),
 
   patch: <T>(
     url: string,
     json: unknown,
-    options?: Parameters<typeof httpClient.patch>[1]
+    options?: Parameters<typeof httpClient.patch>[1],
   ) => httpClient.patch(url, { json, ...options }).json<T>(),
 
   delete: <T>(url: string, options?: Parameters<typeof httpClient.delete>[1]) =>
